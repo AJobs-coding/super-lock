@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +42,6 @@ public class LockAnalysisHelp {
         }
 
         MethodSignature methodSignature = (MethodSignature) signature;
-        Method method = methodSignature.getMethod();
 
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext context = new StandardEvaluationContext();
@@ -83,6 +81,7 @@ public class LockAnalysisHelp {
         TimeUnit timeUnit = lock.timeUnit();
 
         try {
+            // todo 未获取到锁的操作
             rLock.tryLock(waitTime, leaseTime, timeUnit);
         } catch (InterruptedException e) {
             log.error("获取锁失败");

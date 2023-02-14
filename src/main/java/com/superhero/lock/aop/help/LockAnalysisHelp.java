@@ -67,6 +67,8 @@ public class LockAnalysisHelp {
             }
         } else if(!StringUtils.isEmpty(constantKey)) {
             keyJoiner.add(constantKey);
+        } else {
+            throw new RuntimeException("指定一下com.superhero.lock.aop.anno.Lock中的key，别瞎搞");
         }
 
 

@@ -1,5 +1,6 @@
 package com.superhero.lock.aop.anno;
 
+import com.superhero.lock.enums.LockHandleTypeEnum;
 import com.superhero.lock.enums.LockTypeEnum;
 
 import java.lang.annotation.ElementType;
@@ -17,6 +18,12 @@ public @interface Lock {
      * @return
      */
     String prefix();
+
+    /**
+     * lock 处理器
+     * @return
+     */
+    LockHandleTypeEnum lockHandle() default LockHandleTypeEnum.R_LOCK;
 
 
     // ===========================

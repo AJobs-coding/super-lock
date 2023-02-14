@@ -1,7 +1,7 @@
 package com.superhero.lock.lock;
 
-import com.superhero.lock.test.TestService;
-import com.superhero.lock.test.User;
+import com.superhero.lock.lock.test.TestService;
+import com.superhero.lock.lock.test.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

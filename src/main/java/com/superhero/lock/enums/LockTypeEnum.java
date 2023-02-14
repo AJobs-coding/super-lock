@@ -10,9 +10,8 @@ import lombok.Getter;
  */
 @Getter
 public enum LockTypeEnum {
-    NO_FAIR(1, "常规锁"),
+    NO_FAIR(1, "不公平锁"),
     FAIR(2, "公平锁"),
-    // 可扩展
     UNKNOWN(404, "未知");
     /**
      * 锁类型

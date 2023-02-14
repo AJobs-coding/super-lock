@@ -1,0 +1,41 @@
+package com.superhero.lock.aop;
+
+import com.superhero.lock.aop.anno.Lock;
+import com.superhero.lock.aop.help.LockAnalysisHelp;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+
+/**
+ *锁切面操作
+ *
+ *@author weijianxun
+ *@date 2023/2/14 14:05
+ */
+@Aspect
+@Order(-1)
+@Component
+public class LockAop {
+
+    @Autowired
+    private LockAnalysisHelp lockAnalysisHelp;
+
+    @Before("@annotation(lock)")
+    public void before(JoinPoint joinPoint, Lock lock) {
+        Object[] args = joinPoint.getArgs();
+        Signature signature = joinPoint.getSignature();
+        lockAnalysisHelp.lock(signature, args, lock);
+    }
+
+
+    @After("@annotation(lock)")
+    public void after(JoinPoint joinPoint, Lock lock) {
+        lockAnalysisHelp.unLock();
+    }
+
+}

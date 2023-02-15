@@ -60,8 +60,4 @@ public class RLockHandle extends AbstractLockHandle {
     public void unLock() {
         lockThreadLocalHelp.removeLock();
     }
-
-    private boolean paramValid(Object[] args) {
-        return Objects.nonNull(args) && args.length > 0;
-    }
 }

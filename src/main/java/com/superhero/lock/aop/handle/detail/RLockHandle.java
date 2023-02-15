@@ -2,7 +2,7 @@ package com.superhero.lock.aop.handle.detail;
 
 import com.superhero.lock.aop.anno.Lock;
 import com.superhero.lock.aop.handle.AbstractLockHandle;
-import com.superhero.lock.aop.handle.detail.help.LockHandleHelp;
+import com.superhero.lock.aop.handle.detail.help.LockThreadLocalHelp;
 import com.superhero.lock.enums.LockHandleTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RLockHandle extends AbstractLockHandle {
     @Autowired
-    private LockHandleHelp lockHandleHelp;
+    private LockThreadLocalHelp lockThreadLocalHelp;
 
     @Override
     public Integer lockHandleType() {
@@ -53,7 +53,12 @@ public class RLockHandle extends AbstractLockHandle {
         }
 
         // 记得释放锁
-        setLockThreadLock(rLock);
+        lockThreadLocalHelp.setLock(rLock);
+    }
+
+    @Override
+    public void unLock() {
+        lockThreadLocalHelp.removeLock();
     }
 
     private boolean paramValid(Object[] args) {

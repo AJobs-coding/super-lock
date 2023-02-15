@@ -18,7 +18,7 @@ public abstract class AbstractDefaultLockHandle implements LockHandle {
 
     @Override
     public void unLock() {
-
+        throw new RuntimeException("记得把锁关闭一下");
     }
 
     @Override

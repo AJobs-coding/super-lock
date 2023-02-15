@@ -1,8 +1,7 @@
-package com.superhero.lock.aop.handle.detail;
+package com.superhero.lock.aop.handle;
 
 import com.superhero.lock.aop.anno.Lock;
 import com.superhero.lock.aop.anno.MultiLock;
-import com.superhero.lock.aop.handle.LockHandle;
 
 /**
  *默认实现中间层

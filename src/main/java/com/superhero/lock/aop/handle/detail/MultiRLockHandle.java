@@ -35,6 +35,10 @@ public class MultiRLockHandle extends AbstractLockHandle {
 
     @Override
     public void multiLock(String[] paramNames, Object[] paramValues, MultiLock multiLock) {
+        if (!paramValid(paramValues)) {
+            return;
+        }
+
         List<RLock> rLocks = new ArrayList<>(multiLock.value().length);
         for (Lock lock : multiLock.value()) {
             String keyByLock = getKeyByLock(paramNames, paramValues, lock);

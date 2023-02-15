@@ -7,6 +7,7 @@ import org.redisson.api.RLock;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  *抽象类
@@ -26,5 +27,9 @@ public abstract class AbstractLockHandle extends AbstractDefaultLockHandle imple
 
     protected String getKeyByLock(String[] paramNames, Object[] paramValues, Lock lock) {
         return lockHandleHelp.getKeyByLock(paramNames, paramValues, lock);
+    }
+
+    protected boolean paramValid(Object[] args) {
+        return Objects.nonNull(args) && args.length > 0;
     }
 }

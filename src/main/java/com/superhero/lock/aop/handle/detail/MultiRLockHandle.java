@@ -3,12 +3,14 @@ package com.superhero.lock.aop.handle.detail;
 import com.superhero.lock.aop.anno.Lock;
 import com.superhero.lock.aop.anno.MultiLock;
 import com.superhero.lock.aop.handle.AbstractLockHandle;
+import com.superhero.lock.aop.handle.detail.help.LockThreadLocalHelp;
 import com.superhero.lock.enums.LockHandleTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.RedissonMultiLock;
 import org.redisson.api.RLock;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class MultiRLockHandle extends AbstractLockHandle {
+
+    @Resource
+    private LockThreadLocalHelp lockThreadLocalHelp;
 
     @Override
     public Integer lockHandleType() {
@@ -49,11 +54,11 @@ public class MultiRLockHandle extends AbstractLockHandle {
             log.error("获取联合锁失败");
         }
 
-        setLockThreadLock(lock);
+        lockThreadLocalHelp.setLock(lock);
     }
 
     @Override
     public void unLock() {
-        unMultiLock();
+        lockThreadLocalHelp.removeMultiLock();
     }
 }

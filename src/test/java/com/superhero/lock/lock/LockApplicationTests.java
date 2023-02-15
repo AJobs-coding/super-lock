@@ -1,7 +1,7 @@
 package com.superhero.lock.lock;
 
-import com.superhero.lock.test.TestService;
-import com.superhero.lock.test.User;
+import com.superhero.lock.lock.test.TestService;
+import com.superhero.lock.lock.test.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -23,5 +23,13 @@ class LockApplicationTests {
         user.setName("ajobs");
         user.setAge(27);
         testService.test01(user, "001");
+    }
+
+    @Test
+    void test02() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.test02(user, "001");
     }
 }

@@ -1,4 +1,4 @@
-package com.superhero.lock.test;
+package com.superhero.lock.lock.test;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,15 +1,20 @@
 package com.superhero.lock.aop;
 
 import com.superhero.lock.aop.anno.Lock;
-import com.superhero.lock.aop.help.LockAnalysisHelp;
+import com.superhero.lock.aop.anno.MultiLock;
+import com.superhero.lock.aop.handle.LockHandle;
+import com.superhero.lock.aop.handle.LockHandleFactory;
+import com.superhero.lock.enums.LockHandleTypeEnum;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  *锁切面操作
@@ -22,20 +27,40 @@ import org.springframework.stereotype.Component;
 @Component
 public class LockAop {
 
-    @Autowired
-    private LockAnalysisHelp lockAnalysisHelp;
+    @Resource
+    private LockHandleFactory lockHandleFactory;
 
     @Before("@annotation(lock)")
     public void before(JoinPoint joinPoint, Lock lock) {
         Object[] args = joinPoint.getArgs();
         Signature signature = joinPoint.getSignature();
-        lockAnalysisHelp.lock(signature, args, lock);
-    }
+        String[] parameterNames = ((MethodSignature) signature).getParameterNames();
 
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(lock.lockHandle().getType());
+        lockHandle.lock(parameterNames, args, lock);
+    }
 
     @After("@annotation(lock)")
     public void after(JoinPoint joinPoint, Lock lock) {
-        lockAnalysisHelp.unLock();
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(lock.lockHandle().getType());
+        lockHandle.unLock();
     }
 
+    // ===========================================================
+
+    @Before("@annotation(multiLock)")
+    public void beforeMulti(JoinPoint joinPoint, MultiLock multiLock) {
+        Object[] args = joinPoint.getArgs();
+        Signature signature = joinPoint.getSignature();
+        String[] parameterNames = ((MethodSignature) signature).getParameterNames();
+
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.MULTI_LOCK.getType());
+        lockHandle.multiLock(parameterNames, args, multiLock);
+    }
+
+    @After("@annotation(multiLock)")
+    public void afterMulti(JoinPoint joinPoint, MultiLock multiLock) {
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.MULTI_LOCK.getType());
+        lockHandle.unLock();
+    }
 }

@@ -1,6 +1,5 @@
 package com.superhero.lock.aop.anno;
 
-import com.superhero.lock.enums.LockHandleTypeEnum;
 import com.superhero.lock.enums.LockTypeEnum;
 
 import java.lang.annotation.ElementType;
@@ -11,47 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Lock {
-
-    /**
-     * 锁前缀
-     * @return
-     */
-    String prefix();
-
-    /**
-     * lock 处理器
-     * @return
-     */
-    LockHandleTypeEnum lockHandle() default LockHandleTypeEnum.R_LOCK;
-
-
-    // ===========================
-    // 下方三个key 优先级是 singleKey > combineKey > constantKey
-
-    /**
-     * 单一key; 使用spel,示例：
-     * #user.name
-     * @return
-     */
-    String singleKey() default "";
-
-    /**
-     * 组合key; 使用spel,示例：
-     * {#user.name,#user.age}
-     * @return
-     */
-    String[] combineKey() default {};
-
-    /**
-     * 常量key
-     * @return
-     */
-    String constantKey() default "";
-
-    // ==========================
-
-
+public @interface MultiLock {
+    Lock[] value();
 
     /**
      * 锁有效时长

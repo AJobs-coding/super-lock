@@ -10,6 +10,7 @@ import org.redisson.config.Config;
 import org.redisson.config.MasterSlaveServersConfig;
 import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
  *@date 2023/2/14 9:40
  */
 @Configuration
+@ImportAutoConfiguration(classes = {LockHandleConfiguration.class})
 @EnableConfigurationProperties(value = {LockServerProperties.class})
 public class ReddisonConfiguration {
 

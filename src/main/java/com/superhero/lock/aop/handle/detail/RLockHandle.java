@@ -1,7 +1,8 @@
 package com.superhero.lock.aop.handle.detail;
 
 import com.superhero.lock.aop.anno.Lock;
-import com.superhero.lock.aop.handle.LockHandle;
+import com.superhero.lock.aop.handle.AbstractLockHandle;
+import com.superhero.lock.aop.handle.detail.help.LockHandleHelp;
 import com.superhero.lock.enums.LockHandleTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class RLockHandle implements LockHandle {
+public class RLockHandle extends AbstractLockHandle {
     @Autowired
     private LockHandleHelp lockHandleHelp;
 
@@ -34,8 +35,8 @@ public class RLockHandle implements LockHandle {
             return;
         }
 
-        String key = lockHandleHelp.getKeyByLock(paramNames, paramValues, lock);
-        RLock rLock = lockHandleHelp.getLockByLock(key, lock);
+        String key = getKeyByLock(paramNames, paramValues, lock);
+        RLock rLock = getLockByLockType(key, lock.lockType());
         if (Objects.isNull(rLock)) {
             return;
         }
@@ -51,12 +52,8 @@ public class RLockHandle implements LockHandle {
             log.error("获取锁失败");
         }
 
-        lockHandleHelp.setLock(rLock);
-    }
-
-    @Override
-    public void unLock() {
-       lockHandleHelp.removeLock();
+        // 记得释放锁
+        setLockThreadLock(rLock);
     }
 
     private boolean paramValid(Object[] args) {

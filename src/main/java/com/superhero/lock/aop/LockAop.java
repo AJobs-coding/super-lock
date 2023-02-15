@@ -1,8 +1,10 @@
 package com.superhero.lock.aop;
 
 import com.superhero.lock.aop.anno.Lock;
+import com.superhero.lock.aop.anno.MultiLock;
 import com.superhero.lock.aop.handle.LockHandle;
 import com.superhero.lock.aop.handle.LockHandleFactory;
+import com.superhero.lock.enums.LockHandleTypeEnum;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.After;
@@ -38,11 +40,27 @@ public class LockAop {
         lockHandle.lock(parameterNames, args, lock);
     }
 
-
     @After("@annotation(lock)")
     public void after(JoinPoint joinPoint, Lock lock) {
         LockHandle lockHandle = lockHandleFactory.getLockHandle(lock.lockHandle().getType());
         lockHandle.unLock();
     }
 
+    // ===========================================================
+
+    @Before("@annotation(multiLock)")
+    public void beforeMulti(JoinPoint joinPoint, MultiLock multiLock) {
+        Object[] args = joinPoint.getArgs();
+        Signature signature = joinPoint.getSignature();
+        String[] parameterNames = ((MethodSignature) signature).getParameterNames();
+
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.MULTI_LOCK.getType());
+        lockHandle.multiLock(parameterNames, args, multiLock);
+    }
+
+    @After("@annotation(multiLock)")
+    public void afterMulti(JoinPoint joinPoint, MultiLock multiLock) {
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.MULTI_LOCK.getType());
+        lockHandle.unLock();
+    }
 }

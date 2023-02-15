@@ -1,6 +1,7 @@
 package com.superhero.lock.aop.handle;
 
 import com.superhero.lock.aop.anno.Lock;
+import com.superhero.lock.aop.anno.MultiLock;
 
 /**
  *处理器
@@ -19,4 +20,7 @@ public interface LockHandle {
     void lock(String[] paramNames, Object[] paramValues, Lock lock);
 
     void unLock();
+
+
+    void multiLock(String[] paramNames, Object[] paramValues, MultiLock multiLock);
 }

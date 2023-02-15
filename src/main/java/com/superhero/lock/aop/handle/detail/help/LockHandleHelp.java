@@ -1,4 +1,4 @@
-package com.superhero.lock.aop.handle.detail;
+package com.superhero.lock.aop.handle.detail.help;
 
 import com.superhero.lock.aop.anno.Lock;
 import com.superhero.lock.enums.LockTypeEnum;
@@ -28,23 +28,8 @@ public class LockHandleHelp {
     @Autowired
     private RedissonClient redissonClient;
 
-    private final ThreadLocal<RLock> lockThreadLocal = new ThreadLocal<>();
-
-    public void setLock(RLock lock) {
-        lockThreadLocal.set(lock);
-    }
-
-    public void removeLock() {
-        RLock rLock = lockThreadLocal.get();
-        if (Objects.nonNull(rLock)) {
-            rLock.unlockAsync();
-        }
-    }
-
-
-    public RLock getLockByLock(String lockName, Lock lock) {
-        LockTypeEnum lockTypeEnum = lock.lockType();
-        switch (lockTypeEnum) {
+    public RLock getLockByLockType(String lockName, LockTypeEnum lockType) {
+        switch (lockType) {
             case NO_FAIR:
                 return redissonClient.getLock(lockName);
             case FAIR:

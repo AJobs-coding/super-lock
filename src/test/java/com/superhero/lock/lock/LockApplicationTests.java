@@ -24,4 +24,12 @@ class LockApplicationTests {
         user.setAge(27);
         testService.test01(user, "001");
     }
+
+    @Test
+    void test02() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.test02(user, "001");
+    }
 }

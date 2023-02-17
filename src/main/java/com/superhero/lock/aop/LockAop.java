@@ -2,6 +2,7 @@ package com.superhero.lock.aop;
 
 import com.superhero.lock.aop.anno.Lock;
 import com.superhero.lock.aop.anno.MultiLock;
+import com.superhero.lock.aop.anno.RedLock;
 import com.superhero.lock.aop.handle.LockHandle;
 import com.superhero.lock.aop.handle.LockHandleFactory;
 import com.superhero.lock.enums.LockHandleTypeEnum;
@@ -61,6 +62,24 @@ public class LockAop {
     @After("@annotation(multiLock)")
     public void afterMulti(JoinPoint joinPoint, MultiLock multiLock) {
         LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.MULTI_LOCK.getType());
+        lockHandle.unLock();
+    }
+
+    // ==============================================================
+
+    @Before("@annotation(redLock)")
+    public void beforeRed(JoinPoint joinPoint, RedLock redLock) {
+        Object[] args = joinPoint.getArgs();
+        Signature signature = joinPoint.getSignature();
+        String[] parameterNames = ((MethodSignature) signature).getParameterNames();
+
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.RED_LOCK.getType());
+        lockHandle.redLock(parameterNames, args, redLock);
+    }
+
+    @After("@annotation(redLock)")
+    public void afterRed(JoinPoint joinPoint, RedLock redLock) {
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.RED_LOCK.getType());
         lockHandle.unLock();
     }
 }

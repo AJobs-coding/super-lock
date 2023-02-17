@@ -1,6 +1,7 @@
 package com.superhero.lock.aop.handle.detail.help;
 
 import com.superhero.lock.aop.anno.Lock;
+import com.superhero.lock.config.ReddisonClientFactory;
 import com.superhero.lock.enums.LockTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -12,6 +13,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -26,14 +29,34 @@ import java.util.StringJoiner;
 public class LockHandleHelp {
 
     @Autowired
-    private RedissonClient redissonClient;
+    private ReddisonClientFactory reddisonClientFactory;
 
     public RLock getLockByLockType(String lockName, LockTypeEnum lockType) {
         switch (lockType) {
             case NO_FAIR:
-                return redissonClient.getLock(lockName);
+                return reddisonClientFactory.getRedissonClient().getLock(lockName);
             case FAIR:
-                return redissonClient.getFairLock(lockName);
+                return reddisonClientFactory.getRedissonClient().getFairLock(lockName);
+            default:
+                break;
+        }
+        return null;
+    }
+
+    public List<RLock> getLocksByLockType(String lockName, LockTypeEnum lockType) {
+        List<RLock> rLocks = new ArrayList<>(reddisonClientFactory.getRedissonClients().size());
+        switch (lockType) {
+            case NO_FAIR:
+                for (RedissonClient redissonClient : reddisonClientFactory.getRedissonClients()) {
+                    RLock lock = redissonClient.getLock(lockName);
+                    rLocks.add(lock);
+                }
+                return rLocks;
+            case FAIR:
+                for (RedissonClient redissonClient : reddisonClientFactory.getRedissonClients()) {
+                    RLock lock = redissonClient.getFairLock(lockName);
+                    rLocks.add(lock);
+                }
             default:
                 break;
         }

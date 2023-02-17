@@ -2,6 +2,7 @@ package com.superhero.lock.aop.handle;
 
 import com.superhero.lock.aop.anno.Lock;
 import com.superhero.lock.aop.anno.MultiLock;
+import com.superhero.lock.aop.anno.RedLock;
 
 /**
  *处理器
@@ -23,4 +24,6 @@ public interface LockHandle {
 
 
     void multiLock(String[] paramNames, Object[] paramValues, MultiLock multiLock);
+
+    void redLock(String[] paramNames, Object[] paramValues, RedLock redLock);
 }

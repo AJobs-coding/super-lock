@@ -21,3 +21,15 @@ lock:
     single:
       address: redis://${spring.redis.host}:${spring.redis.port}
       password: ${spring.redis.password}
+
+  more:
+    servers:
+       -
+        server-type: single
+        single:
+          address: redis://${spring.redis.host}:${spring.redis.port}
+          password: ${spring.redis.password}
+       - server-type: single
+         single:
+           address: redis://${spring.redis.host}:6380
+           password: ${spring.redis.password}

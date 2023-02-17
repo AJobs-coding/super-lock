@@ -53,11 +53,11 @@ public class RLockHandle extends AbstractLockHandle {
         }
 
         // 记得释放锁
-        lockThreadLocalHelp.setLock(rLock);
+        lockThreadLocalHelp.setLock(rLock, LockHandleTypeEnum.R_LOCK);
     }
 
     @Override
     public void unLock() {
-        lockThreadLocalHelp.removeLock();
+        lockThreadLocalHelp.removeLock(LockHandleTypeEnum.R_LOCK);
     }
 }

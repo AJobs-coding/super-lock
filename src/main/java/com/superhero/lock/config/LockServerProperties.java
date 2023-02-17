@@ -14,9 +14,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *@author weijianxun
  *@date 2023/2/14 9:53
  */
-@ConfigurationProperties(prefix = "lock.server")
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "lock.server")
 public class LockServerProperties {
 
     /**

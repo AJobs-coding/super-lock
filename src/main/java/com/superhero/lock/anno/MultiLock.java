@@ -1,4 +1,4 @@
-package com.superhero.lock.aop.anno;
+package com.superhero.lock.anno;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

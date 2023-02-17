@@ -1,8 +1,8 @@
 package com.superhero.lock.lock.test;
 
-import com.superhero.lock.aop.anno.Lock;
-import com.superhero.lock.aop.anno.MultiLock;
-import com.superhero.lock.aop.anno.RedLock;
+import com.superhero.lock.anno.Lock;
+import com.superhero.lock.anno.MultiLock;
+import com.superhero.lock.anno.RedLock;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;

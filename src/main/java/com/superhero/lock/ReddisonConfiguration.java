@@ -1,8 +1,12 @@
-package com.superhero.lock.config;
+package com.superhero.lock;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.superhero.lock.config.LockHandleConfiguration;
+import com.superhero.lock.config.prop.LockMoreServerProperties;
+import com.superhero.lock.config.prop.LockServerProperties;
 import com.superhero.lock.enums.LockServerTypeEnum;
+import com.superhero.lock.factory.ReddisonClientFactory;
 import com.superhero.lock.util.CollectionsUtil;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
@@ -27,6 +32,7 @@ import java.util.Objects;
  *@date 2023/2/14 9:40
  */
 @Configuration
+@ComponentScan(basePackages = {"com.superhero.lock"})
 @ImportAutoConfiguration(classes = {LockHandleConfiguration.class})
 @EnableConfigurationProperties(value = {LockServerProperties.class, LockMoreServerProperties.class})
 public class ReddisonConfiguration {
@@ -37,12 +43,12 @@ public class ReddisonConfiguration {
     @Autowired
     private LockMoreServerProperties lockMoreServerProperties;
 
-    @Bean(destroyMethod = "shutdown")
-    public RedissonClient redisson() {
-        Config config = new Config();
-        initServer(config, lockServerProperties);
-        return Redisson.create(config);
-    }
+//    @Bean(destroyMethod = "shutdown")
+//    public RedissonClient redisson() {
+//        Config config = new Config();
+//        initServer(config, lockServerProperties);
+//        return Redisson.create(config);
+//    }
 
     @Bean(value = "reddisonClientFactory", destroyMethod = "shutdown")
     public ReddisonClientFactory reddisonClientFactory() {
@@ -72,7 +78,7 @@ public class ReddisonConfiguration {
 
 
     private List<RedissonClient> initMoreReddisonClient() {
-        if (CollectionsUtil.isNotEmpty(lockMoreServerProperties.servers)) {
+        if (CollectionsUtil.isNotEmpty(lockMoreServerProperties.getServers())) {
             List<RedissonClient> list = new ArrayList<>(lockMoreServerProperties.getServers().size());
             for (LockServerProperties server : lockMoreServerProperties.getServers()) {
                 Config config = new Config();

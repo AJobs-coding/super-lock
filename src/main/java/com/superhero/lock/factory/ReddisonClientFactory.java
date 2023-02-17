@@ -1,4 +1,4 @@
-package com.superhero.lock.config;
+package com.superhero.lock.factory;
 
 import com.superhero.lock.util.CollectionsUtil;
 import lombok.Getter;
@@ -40,7 +40,7 @@ public class ReddisonClientFactory {
         try {
             redissonClient.shutdown();
         } catch (Exception e) {
-            log.error("com.superhero.lock.config.ReddisonClientFactory.shutdownReddisonClient", e);
+            log.error("com.superhero.lock.factory.ReddisonClientFactory.shutdownReddisonClient", e);
         }
     }
 }

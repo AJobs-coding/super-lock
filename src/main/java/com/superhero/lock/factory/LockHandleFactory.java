@@ -1,5 +1,6 @@
-package com.superhero.lock.aop.handle;
+package com.superhero.lock.factory;
 
+import com.superhero.lock.aop.handle.LockHandle;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 

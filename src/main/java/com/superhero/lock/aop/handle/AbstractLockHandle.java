@@ -1,6 +1,6 @@
 package com.superhero.lock.aop.handle;
 
-import com.superhero.lock.aop.anno.Lock;
+import com.superhero.lock.anno.Lock;
 import com.superhero.lock.aop.handle.detail.help.LockHandleHelp;
 import com.superhero.lock.enums.LockTypeEnum;
 import org.redisson.api.RLock;

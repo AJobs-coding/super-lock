@@ -1,6 +1,6 @@
 package com.superhero.lock.aop.handle.detail;
 
-import com.superhero.lock.aop.anno.Lock;
+import com.superhero.lock.anno.Lock;
 import com.superhero.lock.aop.handle.AbstractLockHandle;
 import com.superhero.lock.aop.handle.detail.help.LockThreadLocalHelp;
 import com.superhero.lock.enums.LockHandleTypeEnum;

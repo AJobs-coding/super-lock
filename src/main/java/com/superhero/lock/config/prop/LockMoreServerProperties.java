@@ -1,4 +1,4 @@
-package com.superhero.lock.config;
+package com.superhero.lock.config.prop;
 
 import lombok.Getter;
 import lombok.Setter;

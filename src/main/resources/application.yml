@@ -29,7 +29,10 @@ lock:
         single:
           address: redis://${spring.redis.host}:${spring.redis.port}
           password: ${spring.redis.password}
-       - server-type: single
+       -
+         server-type: single
          single:
            address: redis://${spring.redis.host}:6380
            password: ${spring.redis.password}
+  config:
+      lock-watchdog-timeout: 10s

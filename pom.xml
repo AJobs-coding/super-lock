@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.superhero.lock</groupId>
-    <artifactId>lock</artifactId>
+    <artifactId>super-lock</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>super-lock</name>
     <description>super-lock</description>
@@ -85,6 +85,14 @@
                 <version>2.21.0</version>
                 <configuration>
                     <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>

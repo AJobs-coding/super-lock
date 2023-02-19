@@ -1,10 +1,11 @@
 package com.superhero.lock.aop.handle.detail.help;
 
 import com.superhero.lock.anno.Lock;
-import com.superhero.lock.factory.ReddisonClientFactory;
 import com.superhero.lock.enums.LockTypeEnum;
+import com.superhero.lock.factory.RedisonClientFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
+import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionParser;
@@ -29,31 +30,35 @@ import java.util.StringJoiner;
 public class LockHandleHelp {
 
     @Autowired
-    private ReddisonClientFactory reddisonClientFactory;
+    private RedisonClientFactory redisonClientFactory;
 
     public RLock getLockByLockType(String lockName, LockTypeEnum lockType) {
         switch (lockType) {
             case NO_FAIR:
-                return reddisonClientFactory.getRedissonClient().getLock(lockName);
+                return redisonClientFactory.getRedissonClient().getLock(lockName);
             case FAIR:
-                return reddisonClientFactory.getRedissonClient().getFairLock(lockName);
+                return redisonClientFactory.getRedissonClient().getFairLock(lockName);
             default:
                 break;
         }
         return null;
     }
 
+    public RReadWriteLock getRWLock(String lockName) {
+        return redisonClientFactory.getRedissonClient().getReadWriteLock(lockName);
+    }
+
     public List<RLock> getLocksByLockType(String lockName, LockTypeEnum lockType) {
-        List<RLock> rLocks = new ArrayList<>(reddisonClientFactory.getRedissonClients().size());
+        List<RLock> rLocks = new ArrayList<>(redisonClientFactory.getRedissonClients().size());
         switch (lockType) {
             case NO_FAIR:
-                for (RedissonClient redissonClient : reddisonClientFactory.getRedissonClients()) {
+                for (RedissonClient redissonClient : redisonClientFactory.getRedissonClients()) {
                     RLock lock = redissonClient.getLock(lockName);
                     rLocks.add(lock);
                 }
                 return rLocks;
             case FAIR:
-                for (RedissonClient redissonClient : reddisonClientFactory.getRedissonClients()) {
+                for (RedissonClient redissonClient : redisonClientFactory.getRedissonClients()) {
                     RLock lock = redissonClient.getFairLock(lockName);
                     rLocks.add(lock);
                 }

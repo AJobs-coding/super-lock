@@ -17,6 +17,8 @@ public enum LockHandleTypeEnum {
     MULTI_LOCK(2,"联锁"),
     RED_LOCK(3,"红锁"),
 
+    RW_LOCK(3,"读写锁"),
+
     // todo 可扩展
     UNKNOWN(404, "未知"),
     ;

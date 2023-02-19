@@ -9,12 +9,15 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.superhero.lock</groupId>
-    <artifactId>lock</artifactId>
+    <artifactId>super-lock</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>lock</name>
-    <description>lock</description>
+    <name>super-lock</name>
+    <description>super-lock</description>
     <properties>
         <java.version>1.8</java.version>
+        <reddison.version>2.15.2</reddison.version>
+        <lombok.version>1.16.22</lombok.version>
+        <hutool.core.version>5.8.3</hutool.core.version>
     </properties>
     <dependencies>
 
@@ -40,26 +43,27 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>2.15.2</version>
+            <version>${reddison.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.redisson</groupId>-->
-<!--            <artifactId>redisson-spring-boot-starter</artifactId>-->
-<!--            <version>2.15.2</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.redisson</groupId>-->
+        <!--            <artifactId>redisson-spring-boot-starter</artifactId>-->
+        <!--            <version>2.15.2</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.22</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.8.12</version>
+            <artifactId>hutool-core</artifactId>
+            <version>${hutool.core.version}</version>
+            <scope>provided</scope>
         </dependency>
         <!--        切面-->
         <dependency>
@@ -81,6 +85,14 @@
                 <version>2.21.0</version>
                 <configuration>
                     <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>

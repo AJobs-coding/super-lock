@@ -18,7 +18,7 @@ import java.util.Objects;
 @Slf4j
 @Getter
 @Setter
-public class ReddisonClientFactory {
+public class RedisonClientFactory {
 
     private RedissonClient redissonClient;
 

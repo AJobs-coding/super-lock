@@ -7,7 +7,7 @@ import com.superhero.lock.config.prop.LockMoreServerProperties;
 import com.superhero.lock.config.prop.LockServerProperties;
 import com.superhero.lock.config.prop.LockConfigProperties;
 import com.superhero.lock.enums.LockServerTypeEnum;
-import com.superhero.lock.factory.ReddisonClientFactory;
+import com.superhero.lock.factory.RedisonClientFactory;
 import com.superhero.lock.util.CollectionsUtil;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -41,7 +41,7 @@ import java.util.Objects;
         LockMoreServerProperties.class,
         LockConfigProperties.class
 })
-public class ReddisonConfiguration {
+public class RedisonConfiguration {
 
     @Autowired
     private LockServerProperties lockServerProperties;
@@ -60,20 +60,20 @@ public class ReddisonConfiguration {
 //    }
 
     @Bean(value = "reddisonClientFactory", destroyMethod = "shutdown")
-    public ReddisonClientFactory reddisonClientFactory() {
-        ReddisonClientFactory reddisonClientFactory = new ReddisonClientFactory();
+    public RedisonClientFactory reddisonClientFactory() {
+        RedisonClientFactory redisonClientFactory = new RedisonClientFactory();
 
         RedissonClient redissonClient = initReddisionClient();
         if (Objects.nonNull(redissonClient)) {
-            reddisonClientFactory.setRedissonClient(redissonClient);
+            redisonClientFactory.setRedissonClient(redissonClient);
         }
 
         List<RedissonClient> redissonClients = initMoreReddisonClient();
         if (CollectionsUtil.isNotEmpty(redissonClients)) {
-            reddisonClientFactory.setRedissonClients(redissonClients);
+            redisonClientFactory.setRedissonClients(redissonClients);
         }
 
-        return reddisonClientFactory;
+        return redisonClientFactory;
     }
 
     private RedissonClient initReddisionClient() {

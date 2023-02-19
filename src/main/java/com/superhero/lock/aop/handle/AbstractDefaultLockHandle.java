@@ -2,6 +2,7 @@ package com.superhero.lock.aop.handle;
 
 import com.superhero.lock.anno.Lock;
 import com.superhero.lock.anno.MultiLock;
+import com.superhero.lock.anno.ReadWriteLock;
 import com.superhero.lock.anno.RedLock;
 
 /**
@@ -27,6 +28,11 @@ public abstract class AbstractDefaultLockHandle implements LockHandle {
     }
     @Override
     public void redLock(String[] paramNames, Object[] paramValues, RedLock redLock) {
+
+    }
+
+    @Override
+    public void readWriteLock(String[] paramNames, Object[] paramValues, ReadWriteLock readWriteLock) {
 
     }
 }

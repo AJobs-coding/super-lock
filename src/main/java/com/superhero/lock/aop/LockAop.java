@@ -2,6 +2,7 @@ package com.superhero.lock.aop;
 
 import com.superhero.lock.anno.Lock;
 import com.superhero.lock.anno.MultiLock;
+import com.superhero.lock.anno.ReadWriteLock;
 import com.superhero.lock.anno.RedLock;
 import com.superhero.lock.aop.handle.LockHandle;
 import com.superhero.lock.factory.LockHandleFactory;
@@ -80,6 +81,25 @@ public class LockAop {
     @After("@annotation(redLock)")
     public void afterRed(JoinPoint joinPoint, RedLock redLock) {
         LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.RED_LOCK.getType());
+        lockHandle.unLock();
+    }
+
+
+    // ===============================================================
+
+    @Before("@annotation(readWriteLock)")
+    public void beforeRW(JoinPoint joinPoint, ReadWriteLock readWriteLock) {
+        Object[] args = joinPoint.getArgs();
+        Signature signature = joinPoint.getSignature();
+        String[] parameterNames = ((MethodSignature) signature).getParameterNames();
+
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.RW_LOCK.getType());
+        lockHandle.readWriteLock(parameterNames, args, readWriteLock);
+    }
+
+    @After("@annotation(readWriteLock)")
+    public void afterRW(JoinPoint joinPoint, ReadWriteLock readWriteLock) {
+        LockHandle lockHandle = lockHandleFactory.getLockHandle(LockHandleTypeEnum.RW_LOCK.getType());
         lockHandle.unLock();
     }
 }

@@ -51,7 +51,7 @@ public class RedRLockHandle extends AbstractLockHandle {
             // todo 未获取到锁的操作
             redissonRedLock.tryLock(waitTime, leaseTime, timeUnit);
         } catch (InterruptedException e) {
-            log.error("获取联合锁失败");
+            log.error("获取红锁失败", e);
         }
 
         lockThreadLocalHelp.setLock(redissonRedLock, LockHandleTypeEnum.RED_LOCK);

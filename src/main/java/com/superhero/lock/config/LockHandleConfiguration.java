@@ -19,10 +19,12 @@ public class LockHandleConfiguration {
 
 
     @Bean("lockHandleMap")
-    public Map<Integer,LockHandle> lockHandleMap() {
+    public Map<Integer, LockHandle> lockHandleMap() {
         Map<Integer, LockHandle> map = new HashMap<>(lockHandleMap.size());
-        lockHandleMap.forEach((k,v)->{
-            map.put(v.lockHandleType(), v);
+        lockHandleMap.forEach((k, v) -> {
+            for (Integer type : v.lockHandleType()) {
+                map.put(type, v);
+            }
         });
         return map;
     }

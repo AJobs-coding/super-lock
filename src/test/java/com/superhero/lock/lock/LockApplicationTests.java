@@ -19,18 +19,18 @@ class LockApplicationTests {
     private TestService testService;
 
     @Test
-    void test01() {
+    void lock() {
         new Thread(() -> {
             User user = new User();
             user.setName("ajobs");
             user.setAge(27);
-            testService.test01(user, "001");
+            testService.lock(user, "001");
         }).start();
         new Thread(() -> {
             User user = new User();
             user.setName("ajobs");
             user.setAge(27);
-            testService.test01(user, "001");
+            testService.lock(user, "001");
         }).start();
 
         try {
@@ -42,7 +42,7 @@ class LockApplicationTests {
             User user = new User();
             user.setName("ajobs");
             user.setAge(27);
-            testService.test01_1(user, "001");
+            testService.lock_01(user, "001");
         }).start();
 
 
@@ -58,35 +58,75 @@ class LockApplicationTests {
     }
 
     @Test
-    void test02() {
+    void multiLock() {
         User user = new User();
         user.setName("ajobs");
         user.setAge(27);
-        testService.test02(user, "002");
+        testService.multiLock(user, "002");
     }
 
     @Test
-    void test03() {
+    void redLock() {
         User user = new User();
         user.setName("ajobs");
         user.setAge(27);
-        testService.test03(user, "003");
+        testService.redLock(user, "003");
     }
 
     @Test
-    void test04() {
+    void rwLock_write() {
         User user = new User();
         user.setName("ajobs");
         user.setAge(27);
-        testService.test03(user, "004");
+        testService.rwLock_write(user, "004");
     }
 
 
     @Test
-    void test05() {
+    void rwLock_read() {
         User user = new User();
         user.setName("ajobs");
         user.setAge(27);
-        testService.test03(user, "005");
+        testService.rwLock_read(user, "004");
+    }
+
+    @Test
+    void superLock_lock() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_lock(user, "004");
+    }
+
+    @Test
+    void superLock_multi() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_multi(user, "004");
+    }
+
+    @Test
+    void superLock_red() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_red(user, "004");
+    }
+
+    @Test
+    void superLock_read() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_read(user, "004");
+    }
+
+    @Test
+    void superLock_write() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_write(user, "004");
     }
 }

@@ -4,6 +4,7 @@ import com.superhero.lock.anno.Lock;
 import com.superhero.lock.anno.MultiLock;
 import com.superhero.lock.anno.ReadWriteLock;
 import com.superhero.lock.anno.RedLock;
+import com.superhero.lock.anno.SuperLock;
 
 /**
  *默认实现中间层
@@ -12,6 +13,12 @@ import com.superhero.lock.anno.RedLock;
  *@date 2023/2/15 13:46
  */
 public abstract class AbstractDefaultLockHandle implements LockHandle {
+
+    @Override
+    public void superLock(String[] paramNames, Object[] paramValues, SuperLock lock) {
+
+    }
+
     @Override
     public void lock(String[] paramNames, Object[] paramValues, Lock lock) {
 

@@ -2,6 +2,7 @@ package com.superhero.lock.aop.handle.detail;
 
 import com.superhero.lock.anno.Lock;
 import com.superhero.lock.anno.ReadWriteLock;
+import com.superhero.lock.anno.SuperLock;
 import com.superhero.lock.aop.handle.AbstractLockHandle;
 import com.superhero.lock.aop.handle.detail.help.LockHandleHelp;
 import com.superhero.lock.aop.handle.detail.help.LockThreadLocalHelp;
@@ -13,6 +14,8 @@ import org.redisson.api.RReadWriteLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -32,8 +35,22 @@ public class ReadWriteLockHanle extends AbstractLockHandle {
     private LockHandleHelp lockHandleHelp;
 
     @Override
-    public Integer lockHandleType() {
-        return LockHandleTypeEnum.RW_LOCK.getType();
+    public List<Integer> lockHandleType() {
+        return Arrays.asList(LockHandleTypeEnum.RW_LOCK.getType(), LockHandleTypeEnum.READ.getType(), LockHandleTypeEnum.WRITE.getType());
+    }
+
+
+    @Override
+    public void superLock(String[] paramNames, Object[] paramValues, SuperLock lock) {
+        if (!paramValid(paramValues)) {
+            return;
+        }
+        LockHandleTypeEnum lockHandleTypeEnum = lock.useLock();
+        if (Objects.equals(lockHandleTypeEnum, LockHandleTypeEnum.READ)) {
+            readWriteLock(paramNames, paramValues, lock.lock(), ReadWriteLockTypeEnum.READ);
+        } else if (Objects.equals(lockHandleTypeEnum, LockHandleTypeEnum.WRITE)) {
+            readWriteLock(paramNames, paramValues, lock.lock(), ReadWriteLockTypeEnum.WRITE);
+        }
     }
 
     @Override
@@ -42,11 +59,14 @@ public class ReadWriteLockHanle extends AbstractLockHandle {
             return;
         }
 
+        ReadWriteLockTypeEnum readWriteLockTypeEnum = readWriteLock.lockType();
         Lock lock = readWriteLock.lock();
+        readWriteLock(paramNames, paramValues, lock, readWriteLockTypeEnum);
+    }
+
+    private void readWriteLock(String[] paramNames, Object[] paramValues, Lock lock, ReadWriteLockTypeEnum readWriteLockTypeEnum) {
         String lockName = getKeyByLock(paramNames, paramValues, lock);
         RReadWriteLock rwLock = lockHandleHelp.getRWLock(lockName);
-
-        ReadWriteLockTypeEnum readWriteLockTypeEnum = readWriteLock.lockType();
         boolean write = Objects.equals(readWriteLockTypeEnum, ReadWriteLockTypeEnum.WRITE);
         boolean read = Objects.equals(readWriteLockTypeEnum, ReadWriteLockTypeEnum.READ);
         RLock rLock = null;

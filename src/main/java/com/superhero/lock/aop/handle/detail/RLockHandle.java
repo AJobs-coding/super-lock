@@ -1,6 +1,7 @@
 package com.superhero.lock.aop.handle.detail;
 
 import com.superhero.lock.anno.Lock;
+import com.superhero.lock.anno.SuperLock;
 import com.superhero.lock.aop.handle.AbstractLockHandle;
 import com.superhero.lock.aop.handle.detail.help.LockThreadLocalHelp;
 import com.superhero.lock.enums.LockHandleTypeEnum;
@@ -9,6 +10,8 @@ import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +28,14 @@ public class RLockHandle extends AbstractLockHandle {
     private LockThreadLocalHelp lockThreadLocalHelp;
 
     @Override
-    public Integer lockHandleType() {
-        return LockHandleTypeEnum.R_LOCK.getType();
+    public List<Integer> lockHandleType() {
+        return Arrays.asList(LockHandleTypeEnum.R_LOCK.getType());
+    }
+
+
+    @Override
+    public void superLock(String[] paramNames, Object[] paramValues, SuperLock lock) {
+        lock(paramNames, paramValues, lock.lock());
     }
 
     @Override

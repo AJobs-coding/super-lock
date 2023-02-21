@@ -54,19 +54,22 @@ public class RLockHandle extends AbstractLockHandle {
         long leaseTime = lock.leaseTime();
         TimeUnit timeUnit = lock.timeUnit();
 
+        boolean getLock = false;
         try {
             // todo 未获取到锁的操作
-            boolean b = rLock.tryLock(waitTime, leaseTime, timeUnit);
-            System.out.println("获取到锁了" + b + ",  waitTime:" + waitTime);
-            if (!b) {
-                System.out.println("获取失败" + Thread.currentThread().getId());
-            }
+            getLock = rLock.tryLock(waitTime, leaseTime, timeUnit);
+//            System.out.println("获取到锁了" + b + ",  waitTime:" + waitTime);
+//            if (!b) {
+//                System.out.println("获取失败" + Thread.currentThread().getId());
+//            }
         } catch (InterruptedException e) {
             log.error("获取锁失败", e);
         }
 
         // 记得释放锁
-        lockThreadLocalHelp.setLock(rLock, LockHandleTypeEnum.R_LOCK);
+        if (getLock) {
+            lockThreadLocalHelp.setLock(rLock, LockHandleTypeEnum.R_LOCK);
+        }
     }
 
     @Override

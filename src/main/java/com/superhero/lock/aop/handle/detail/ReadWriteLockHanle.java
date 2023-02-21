@@ -82,8 +82,9 @@ public class ReadWriteLockHanle extends AbstractLockHandle {
         long leaseTime = lock.leaseTime();
         TimeUnit timeUnit = lock.timeUnit();
 
+        boolean getLock = false;
         try {
-            rLock.tryLock(waitTime, leaseTime, timeUnit);
+            getLock = rLock.tryLock(waitTime, leaseTime, timeUnit);
         } catch (InterruptedException e) {
             if (read) {
                 log.error("获取读锁失败", e);
@@ -92,7 +93,9 @@ public class ReadWriteLockHanle extends AbstractLockHandle {
             }
         }
 
-        lockThreadLocalHelp.setLock(rLock, LockHandleTypeEnum.RW_LOCK);
+        if(getLock) {
+            lockThreadLocalHelp.setLock(rLock, LockHandleTypeEnum.RW_LOCK);
+        }
     }
 
     @Override

@@ -62,14 +62,17 @@ public class MultiRLockHandle extends AbstractLockHandle {
         long leaseTime = lock.leaseTime();
         TimeUnit timeUnit = lock.timeUnit();
 
+        boolean getLock = false;
         try {
             // todo 未获取到锁的操作
-            redissonMultiLock.tryLock(waitTime, leaseTime, timeUnit);
+            getLock = redissonMultiLock.tryLock(waitTime, leaseTime, timeUnit);
         } catch (InterruptedException e) {
             log.error("获取联合锁失败", e);
         }
 
-        lockThreadLocalHelp.setLock(redissonMultiLock, LockHandleTypeEnum.MULTI_LOCK);
+        if(getLock) {
+            lockThreadLocalHelp.setLock(redissonMultiLock, LockHandleTypeEnum.MULTI_LOCK);
+        }
     }
 
     @Override

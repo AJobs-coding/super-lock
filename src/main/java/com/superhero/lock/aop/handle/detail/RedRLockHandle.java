@@ -60,14 +60,17 @@ public class RedRLockHandle extends AbstractLockHandle {
         long leaseTime = lock.leaseTime();
         TimeUnit timeUnit = lock.timeUnit();
 
+        boolean getLock = false;
         try {
             // todo 未获取到锁的操作
-            redissonRedLock.tryLock(waitTime, leaseTime, timeUnit);
+            getLock = redissonRedLock.tryLock(waitTime, leaseTime, timeUnit);
         } catch (InterruptedException e) {
             log.error("获取红锁失败", e);
         }
 
-        lockThreadLocalHelp.setLock(redissonRedLock, LockHandleTypeEnum.RED_LOCK);
+        if (getLock) {
+            lockThreadLocalHelp.setLock(redissonRedLock, LockHandleTypeEnum.RED_LOCK);
+        }
     }
 
     @Override

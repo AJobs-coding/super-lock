@@ -2,10 +2,9 @@ package com.superhero.lock;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.superhero.lock.config.LockHandleConfiguration;
+import com.superhero.lock.config.prop.LockConfigProperties;
 import com.superhero.lock.config.prop.LockMoreServerProperties;
 import com.superhero.lock.config.prop.LockServerProperties;
-import com.superhero.lock.config.prop.LockConfigProperties;
 import com.superhero.lock.enums.LockServerTypeEnum;
 import com.superhero.lock.factory.RedisonClientFactory;
 import com.superhero.lock.util.CollectionsUtil;
@@ -16,7 +15,6 @@ import org.redisson.config.Config;
 import org.redisson.config.MasterSlaveServersConfig;
 import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,7 +33,6 @@ import java.util.Objects;
  */
 @Configuration
 @ComponentScan(basePackages = {"com.superhero.lock"})
-@ImportAutoConfiguration(classes = {LockHandleConfiguration.class})
 @EnableConfigurationProperties(value = {
         LockServerProperties.class,
         LockMoreServerProperties.class,

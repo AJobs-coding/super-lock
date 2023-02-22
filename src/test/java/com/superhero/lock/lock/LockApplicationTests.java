@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 class LockApplicationTests {
@@ -18,26 +19,114 @@ class LockApplicationTests {
     private TestService testService;
 
     @Test
-    void test01() {
-        User user = new User();
-        user.setName("ajobs");
-        user.setAge(27);
-        testService.test01(user, "001");
+    void lock() {
+        new Thread(() -> {
+            User user = new User();
+            user.setName("ajobs");
+            user.setAge(27);
+            testService.lock(user, "001");
+        }).start();
+        new Thread(() -> {
+            User user = new User();
+            user.setName("ajobs");
+            user.setAge(27);
+            testService.lock(user, "001");
+        }).start();
+
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        new Thread(() -> {
+            User user = new User();
+            user.setName("ajobs");
+            user.setAge(27);
+            testService.lock_01(user, "001");
+        }).start();
+
+
+        try {
+            TimeUnit.SECONDS.sleep(100L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+//        User user = new User();
+//        user.setName("ajobs");
+//        user.setAge(27);
+//        testService.test01(user, "001");
     }
 
     @Test
-    void test02() {
+    void multiLock() {
         User user = new User();
         user.setName("ajobs");
         user.setAge(27);
-        testService.test02(user, "002");
+        testService.multiLock(user, "002");
     }
 
     @Test
-    void test03() {
+    void redLock() {
         User user = new User();
         user.setName("ajobs");
         user.setAge(27);
-        testService.test03(user, "003");
+        testService.redLock(user, "003");
+    }
+
+    @Test
+    void rwLock_write() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.rwLock_write(user, "004");
+    }
+
+
+    @Test
+    void rwLock_read() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.rwLock_read(user, "004");
+    }
+
+    @Test
+    void superLock_lock() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_lock(user, "004");
+    }
+
+    @Test
+    void superLock_multi() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_multi(user, "004");
+    }
+
+    @Test
+    void superLock_red() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_red(user, "004");
+    }
+
+    @Test
+    void superLock_read() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_read(user, "004");
+    }
+
+    @Test
+    void superLock_write() {
+        User user = new User();
+        user.setName("ajobs");
+        user.setAge(27);
+        testService.superLock_write(user, "004");
     }
 }

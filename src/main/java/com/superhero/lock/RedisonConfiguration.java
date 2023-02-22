@@ -2,11 +2,11 @@ package com.superhero.lock;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.superhero.lock.config.LockHandleConfiguration;
+import com.superhero.lock.config.prop.LockConfigProperties;
 import com.superhero.lock.config.prop.LockMoreServerProperties;
 import com.superhero.lock.config.prop.LockServerProperties;
 import com.superhero.lock.enums.LockServerTypeEnum;
-import com.superhero.lock.factory.ReddisonClientFactory;
+import com.superhero.lock.factory.RedisonClientFactory;
 import com.superhero.lock.util.CollectionsUtil;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -15,12 +15,12 @@ import org.redisson.config.Config;
 import org.redisson.config.MasterSlaveServersConfig;
 import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,15 +33,21 @@ import java.util.Objects;
  */
 @Configuration
 @ComponentScan(basePackages = {"com.superhero.lock"})
-@ImportAutoConfiguration(classes = {LockHandleConfiguration.class})
-@EnableConfigurationProperties(value = {LockServerProperties.class, LockMoreServerProperties.class})
-public class ReddisonConfiguration {
+@EnableConfigurationProperties(value = {
+        LockServerProperties.class,
+        LockMoreServerProperties.class,
+        LockConfigProperties.class
+})
+public class RedisonConfiguration {
 
     @Autowired
     private LockServerProperties lockServerProperties;
 
     @Autowired
     private LockMoreServerProperties lockMoreServerProperties;
+
+    @Autowired
+    private LockConfigProperties lockConfigProperties;
 
 //    @Bean(destroyMethod = "shutdown")
 //    public RedissonClient redisson() {
@@ -51,24 +57,24 @@ public class ReddisonConfiguration {
 //    }
 
     @Bean(value = "reddisonClientFactory", destroyMethod = "shutdown")
-    public ReddisonClientFactory reddisonClientFactory() {
-        ReddisonClientFactory reddisonClientFactory = new ReddisonClientFactory();
+    public RedisonClientFactory reddisonClientFactory() {
+        RedisonClientFactory redisonClientFactory = new RedisonClientFactory();
 
         RedissonClient redissonClient = initReddisionClient();
         if (Objects.nonNull(redissonClient)) {
-            reddisonClientFactory.setRedissonClient(redissonClient);
+            redisonClientFactory.setRedissonClient(redissonClient);
         }
 
         List<RedissonClient> redissonClients = initMoreReddisonClient();
         if (CollectionsUtil.isNotEmpty(redissonClients)) {
-            reddisonClientFactory.setRedissonClients(redissonClients);
+            redisonClientFactory.setRedissonClients(redissonClients);
         }
 
-        return reddisonClientFactory;
+        return redisonClientFactory;
     }
 
     private RedissonClient initReddisionClient() {
-        Config config = new Config();
+        Config config = initConfig();
         boolean initServer = initServer(config, lockServerProperties);
         if (initServer) {
             return Redisson.create(config);
@@ -76,12 +82,20 @@ public class ReddisonConfiguration {
         return null;
     }
 
+    private Config initConfig() {
+        Config config = new Config();
+
+        Duration lockWatchdogTimeout = lockConfigProperties.getLockWatchdogTimeout();
+        config.setLockWatchdogTimeout(lockWatchdogTimeout.toMillis());
+
+        return config;
+    }
 
     private List<RedissonClient> initMoreReddisonClient() {
         if (CollectionsUtil.isNotEmpty(lockMoreServerProperties.getServers())) {
             List<RedissonClient> list = new ArrayList<>(lockMoreServerProperties.getServers().size());
             for (LockServerProperties server : lockMoreServerProperties.getServers()) {
-                Config config = new Config();
+                Config config = initConfig();
                 boolean initServer = initServer(config, server);
                 if (initServer) {
                     list.add(Redisson.create(config));

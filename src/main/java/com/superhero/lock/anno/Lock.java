@@ -57,7 +57,7 @@ public @interface Lock {
      * 默认等待时间
      * @return
      */
-    long waitTime() default 10;
+    long waitTime() default 3;
 
     /**
      * 时间单位
@@ -66,7 +66,8 @@ public @interface Lock {
     TimeUnit timeUnit() default TimeUnit.SECONDS;
 
     /**
-     * 锁类型
+     * 锁类型:
+     * 读写锁指定改参数也没什么意义
      * @return
      */
     LockTypeEnum lockType() default LockTypeEnum.NO_FAIR;

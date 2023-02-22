@@ -1,6 +1,7 @@
 package com.superhero.lock.aop.handle.detail;
 
 import com.superhero.lock.anno.Lock;
+import com.superhero.lock.anno.SuperLock;
 import com.superhero.lock.aop.handle.AbstractLockHandle;
 import com.superhero.lock.aop.handle.detail.help.LockThreadLocalHelp;
 import com.superhero.lock.enums.LockHandleTypeEnum;
@@ -9,6 +10,8 @@ import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +28,14 @@ public class RLockHandle extends AbstractLockHandle {
     private LockThreadLocalHelp lockThreadLocalHelp;
 
     @Override
-    public Integer lockHandleType() {
-        return LockHandleTypeEnum.R_LOCK.getType();
+    public List<Integer> lockHandleType() {
+        return Arrays.asList(LockHandleTypeEnum.R_LOCK.getType());
+    }
+
+
+    @Override
+    public void superLock(String[] paramNames, Object[] paramValues, SuperLock lock) {
+        lock(paramNames, paramValues, lock.lock());
     }
 
     @Override
@@ -45,15 +54,22 @@ public class RLockHandle extends AbstractLockHandle {
         long leaseTime = lock.leaseTime();
         TimeUnit timeUnit = lock.timeUnit();
 
+        boolean getLock = false;
         try {
             // todo 未获取到锁的操作
-            rLock.tryLock(waitTime, leaseTime, timeUnit);
+            getLock = rLock.tryLock(waitTime, leaseTime, timeUnit);
+//            System.out.println("获取到锁了" + b + ",  waitTime:" + waitTime);
+//            if (!b) {
+//                System.out.println("获取失败" + Thread.currentThread().getId());
+//            }
         } catch (InterruptedException e) {
-            log.error("获取锁失败");
+            log.error("获取锁失败", e);
         }
 
         // 记得释放锁
-        lockThreadLocalHelp.setLock(rLock, LockHandleTypeEnum.R_LOCK);
+        if (getLock) {
+            lockThreadLocalHelp.setLock(rLock, LockHandleTypeEnum.R_LOCK);
+        }
     }
 
     @Override

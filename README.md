@@ -5,8 +5,8 @@
 使用注解实现锁的自动开启和关闭，让开发者将更多的精力放在业务层面上。
 
 # 设计流程概述
-1. 在业务层方法使用自定义注解@Lock(@MultiLock、@RedLock)
-2. 在LockAop拦截进行锁的开启和关闭
+1. 在业务层方法使用自定义注解（package: com.superhero.lock.anno）
+2. 在LockAop(位置： com.superhero.lock.aop.LockAop)拦截进行锁的开启和关闭
 
 # 使用示例
 1. 查看 application.yml 查看相关配置

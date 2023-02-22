@@ -22,6 +22,7 @@ public class LockThreadLocalHelp {
     public void setLock(Lock lock, LockHandleTypeEnum lockHandleTypeEnum) {
         switch (lockHandleTypeEnum) {
             case R_LOCK:
+            case RW_LOCK:
                 lockThreadLocal.set((RLock) lock);
                 break;
             case RED_LOCK:
@@ -33,12 +34,14 @@ public class LockThreadLocalHelp {
         }
     }
 
-    public void removeLock( LockHandleTypeEnum lockHandleTypeEnum) {
+    public void removeLock(LockHandleTypeEnum lockHandleTypeEnum) {
         switch (lockHandleTypeEnum) {
             case R_LOCK:
+            case RW_LOCK:
                 RLock rLock = lockThreadLocal.get();
                 if (Objects.nonNull(rLock)) {
                     rLock.unlockAsync();
+                    lockThreadLocal.remove();
                 }
                 break;
             case RED_LOCK:
@@ -46,6 +49,7 @@ public class LockThreadLocalHelp {
                 RedissonMultiLock multiLock = multiLockThreadLocal.get();
                 if (Objects.nonNull(multiLock)) {
                     multiLock.unlockAsync(Thread.currentThread().getId());
+                    multiLockThreadLocal.remove();
                 }
                 break;
             default:
